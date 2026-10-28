@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Cortes de culto{% endblock %}</title>
+<style>
+  :root { --bg:#f7f7f5; --fg:#1d1d1b; --muted:#6b6b66; --card:#fff; --line:#e3e3de; --accent:#2f5d50; --warn:#9a5b00; --err:#a3261d; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.5 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
+  main { max-width:960px; margin:0 auto; padding:24px 16px 64px; }
+  h1 { font-size:1.6rem; margin:0 0 4px; } h2 { font-size:1.15rem; margin:32px 0 12px; }
+  a { color:var(--accent); }
+  .muted { color:var(--muted); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  input[type=url], input[type=file] { width:100%; padding:10px; border:1px solid var(--line); border-radius:8px; font:inherit; background:#fff; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 18px; font:inherit; cursor:pointer; }
+  .erro { color:var(--err); } .aviso { color:var(--warn); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:16px; }
+  video { width:100%; aspect-ratio:9/16; background:#000; border-radius:8px; }
+  .etapas { display:flex; flex-wrap:wrap; gap:6px; list-style:none; padding:0; }
+  .etapas li { padding:4px 10px; border-radius:999px; border:1px solid var(--line); font-size:.9rem; color:var(--muted); }
+  .etapas li.feito { background:#e6efe9; color:var(--accent); border-color:#cfe0d6; }
+  .etapas li.atual { background:var(--accent); color:#fff; border-color:var(--accent); }
+  table { width:100%; border-collapse:collapse; } td { padding:6px 0; border-bottom:1px solid var(--line); }
+</style>
+</head>
+<body><main>{% block content %}{% endblock %}</main></body>
+</html>

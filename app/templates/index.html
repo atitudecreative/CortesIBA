@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Cortes de culto</h1>
+<p class="muted">Cole o link do culto no YouTube ou envie o arquivo. Você recebe cortes verticais 9:16 com legenda.</p>
+
+<form class="card" method="post" action="/cultos" enctype="multipart/form-data">
+  {% if erro %}<p class="erro">{{ erro }}</p>{% endif %}
+  <p><label>Link do YouTube<br><input type="url" name="url" placeholder="https://www.youtube.com/watch?v=..."></label></p>
+  <p><label>ou arquivo de vídeo<br><input type="file" name="arquivo" accept="video/*"></label></p>
+  <p><label><input type="checkbox" name="autorizado" value="true"> A igreja é dona do vídeo ou tem autorização para usá-lo.</label></p>
+  <button type="submit">Gerar cortes</button>
+</form>
+
+{% if cultos %}
+<h2>Recentes</h2>
+<table>
+{% for c in cultos %}
+  <tr><td><a href="/cultos/{{ c.id }}">#{{ c.id }} {{ c.titulo or c.url or "Upload" }}</a></td>
+      <td class="muted">{{ c.status }}</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

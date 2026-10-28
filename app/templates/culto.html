@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Culto #{{ culto.id }}{% endblock %}
+{% block content %}
+<p><a href="/">← Voltar</a></p>
+<h1>Culto #{{ culto.id }}</h1>
+<p class="muted">{{ culto.titulo or culto.url or "Upload" }}</p>
+
+{% set atual = etapas.index(culto.status) if culto.status in etapas else -1 %}
+<ul class="etapas">
+  {% for e in etapas[1:] %}
+    <li class="{{ 'feito' if loop.index < atual or culto.status == 'pronto' else ('atual' if loop.index == atual else '') }}">{{ e }}</li>
+  {% endfor %}
+</ul>
+
+{% if culto.status == "erro" %}
+  <p class="erro">Falhou: {{ culto.erro }}</p>
+  <form method="post" action="/cultos/{{ culto.id }}/reprocessar"><button>Tentar de novo</button></form>
+  <p class="muted">As etapas já concluídas não são refeitas.</p>
+{% elif culto.status != "pronto" %}
+  <p class="muted">Processando. Esta página atualiza sozinha.</p>
+  <script>
+    const inicial = {{ culto.status | tojson }};
+    setInterval(async () => {
+      const r = await fetch("/cultos/{{ culto.id }}/status");
+      if (r.ok && (await r.json()).status !== inicial) location.reload();
+    }, 3000);
+  </script>
+{% endif %}
+
+{% if clips %}
+<h2>Cortes ({{ clips | length }}) — ordenados por nota</h2>
+<p class="muted">Revise cada corte antes de publicar.</p>
+<div class="grid">
+{% for clip in clips %}
+  <div class="card">
+    {% if clip.arquivo %}
+      <video src="/cultos/{{ culto.id }}/clips/{{ clip.arquivo }}" controls preload="metadata"></video>
+    {% endif %}
+    <p><strong>{{ clip.titulo }}</strong><br>
+       <span class="muted">{{ "%d:%02d"|format(clip.inicio // 60, clip.inicio % 60) }}–{{ "%d:%02d"|format(clip.fim // 60, clip.fim % 60) }} · nota {{ clip.nota }}</span></p>
+    <p>“{{ clip.gancho }}”</p>
+    <p class="muted">{{ clip.motivo }}</p>
+    {% if clip.depende_contexto %}<p class="aviso">Pode depender do que foi dito antes.</p>{% endif %}
+    {% if clip.arquivo %}<a href="/cultos/{{ culto.id }}/clips/{{ clip.arquivo }}" download>Baixar</a>{% endif %}
+  </div>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}
